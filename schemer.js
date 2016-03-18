@@ -44,7 +44,7 @@ class Schema {
     return props;
   }
 
-  matchesType(obj, type) {
+  type(obj, type) {
     if (!type) throw new Error("Type is required");
     if (type instanceof Schema) {
       return type.validate(obj).isValid;
@@ -84,6 +84,7 @@ class Schema {
         success = false;
       }
     }
+    return success;
   }
 
   validate(obj) {
@@ -104,7 +105,9 @@ class Schema {
       if (!(prop in this.rules)) {
         errors.push(prop + " not in schema rules");
       } else {
-
+        if (!this.validateProp(prop, this.rules[prop])) {
+          errors.push(prop + " is invalid"); // TODO: Expand on this later
+        }
       }
     }
 
