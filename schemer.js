@@ -9,7 +9,8 @@ const toType = function(obj) {
 };
 
 class Result {
-  constructor(errors = []) {
+  constructor(errors) {
+    errors = errors || [];
     if (errors.length > 0) {
       this.isValid = false;
       this.errors = errors;
