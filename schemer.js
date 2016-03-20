@@ -60,6 +60,11 @@ class Schema {
 
   _validateObjProp(val, propDef, propName) {
     let errors = [];
+    if (propDef instanceof Schema) {
+      let result = propDef.validate(val);
+      return result.errors ? result.errors : [];
+    }
+
     // Check type, immediatley return if there is an error here
     if (this._toType(val) !== propDef.type && propDef.type !== "any") {
       return "Error with " + propName + ": " + this.messages.type;
