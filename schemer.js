@@ -14,7 +14,7 @@ class Schema {
     this.props = props;
     this.messages = {
       type: "Invalid type",
-      arrayType: "Array has values of an invalid type"
+      arrayError: "Array is invalid"
     };
   }
 
@@ -43,18 +43,16 @@ class Schema {
       array.forEach((val) => {
         if (toType(val) !== type) {
           success = false;
+        } else if (propDef.subRules) {
+          propDef.subRules.forEach((rule) => {
+            rule(val, type, propName);
+          });
         }
       });
 
       if (!success) {
         errors.push("Error with " + propName + ": " + this.messages.arrayType);
       }
-    }
-
-    if (propDef.subRules) {
-      propDef.subRules.forEach((rule) => {
-        rule(array, type, propName);
-      });
     }
   }
 
