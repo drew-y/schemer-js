@@ -38,21 +38,22 @@ class Schema {
     let errors = [];
     let type = propDef.type[0];
     let toType = this._toType;
-    if (type !== "any") {
-      let success = true;
-      array.forEach((val) => {
-        if (toType(val) !== type) {
-          success = false;
-        } else if (propDef.subRules) {
-          propDef.subRules.forEach((rule) => {
-            rule(val, type, propName);
-          });
-        }
-      });
-
-      if (!success) {
-        errors.push("Error with " + propName + ": " + this.messages.arrayType);
+    let success = true;
+    array.forEach((val) => {
+      if (toType(val) !== type && type !== "any") {
+        success = false;
+      } else if (propDef.subRules) {
+        propDef.subRules.forEach((rule) => {
+          let result = rule(val, type, propName);
+          if (result instanceof Error) {
+            errors.push(result.message);
+          }
+        });
       }
+    });
+
+    if (!success) {
+      errors.push("Error with " + propName + ": " + this.messages.arrayType);
     }
   }
 
@@ -76,7 +77,10 @@ class Schema {
     // Run rule functions
     if (propDef.rules) {
       propDef.rules.forEach((rule) => {
-        errors = errors.concat(rule(val, propDef.type, propName));
+        let result = rule(val, propDef.type, propName);
+        if (result instanceof Error) {
+          errors.push(result.message);
+        }
       });
     }
 
