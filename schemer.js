@@ -15,7 +15,7 @@ class Schema {
     this.messages = {
       type: "Invalid type",
       arrayType: "Array has values of an invalid type"
-    }
+    };
   }
 
   _toType(obj) {
@@ -25,7 +25,7 @@ class Schema {
 
   getRequiredProps() {
     let props = [];
-    for (let prop of this.props) {
+    for (let prop in this.props) {
       let optional = this.props[prop].optional;
       if (!optional) {
         props.push(prop);
@@ -60,8 +60,8 @@ class Schema {
 
   _validateObjProp(val, propDef, propName) {
     let errors = [];
-    if (propDef instanceof Schema) {
-      let result = propDef.validate(val);
+    if (propDef.type instanceof Schema) {
+      let result = propDef.type.validate(val);
       return result.errors ? result.errors : [];
     }
 
@@ -72,13 +72,13 @@ class Schema {
 
     // Special validation for arrays
     if (this._toType(val) === "array") {
-       errors.concat(this._validateArray(val, propDef, propName));
+       errors = errors.concat(this._validateArray(val, propDef, propName));
     }
 
     // Run rule functions
     if (propDef.rules) {
       propDef.rules.forEach((rule) => {
-        errors.concat(rule(val, propDef.type, propName));
+        errors = errors.concat(rule(val, propDef.type, propName));
       });
     }
 
@@ -103,7 +103,7 @@ class Schema {
         errors.push(objProp + " not in schema rules");
       } else {
         let objPropErrors = this._validateObjProp(obj[objProp], this.props[objProp], objProp);
-        errors.concat(objPropErrors);
+        errors = errors.concat(objPropErrors);
       }
     }
 
