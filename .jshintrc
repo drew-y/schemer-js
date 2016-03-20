@@ -1,4 +1,8 @@
 {
   "node": true,
-  "esnext": true
+  "esnext": true,
+  "predef": [
+    "describe",
+    "it"
+  ]
 }
