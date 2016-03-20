@@ -3,6 +3,10 @@
   "esnext": true,
   "predef": [
     "describe",
-    "it"
+    "it",
+    "before",
+    "beforeEach",
+    "after",
+    "afterEach"
   ]
 }
