@@ -6,10 +6,14 @@ const toType = function (obj) {
 };
 
 class Result {
-  constructor(isValid, invalidFeilds, reasons) {
-    this.isValid = isValid;
+  constructor(invalidFeilds, reasons) {
     this.invalidFeilds = invalidFeilds;
     this.reasons = reasons;
+    if (invalidFeilds.length > 0) {
+      this.isValid = false;
+    } else {
+      this.isValid = true;
+    }
   }
 }
 
@@ -23,10 +27,6 @@ class Schema {
       if (!props[prop].type) throw new Error("Type is required @: " + prop);
     }
     this.props = props;
-    this.messages = {
-      type: "Invalid type",
-      arrayError: "Array is invalid"
-    };
   }
 
   getRequiredProps() {
@@ -40,86 +40,85 @@ class Schema {
     return props;
   }
 
-  _validateArray(array, propDef, propName) {
-    let errors = [];
+  _validateArray(array, propDef) {
     let type = propDef.type[0];
-    let success = true;
-    array.forEach((val) => {
-      if (type instanceof Schema) {
-        let result = type.validate(val);
-        return result.errors ? result.errors : [];
-      } else if (toType(val) !== type && type !== "any") {
-        success = false;
-      } else if (propDef.subRules) {
-        propDef.subRules.forEach((rule, index) => {
-          let result = rule(val, type, propName);
-          if (result instanceof Error) {
-            errors.push(result.message);
-          } else if (result === false) {
-            errors.push("fails against rule at index: " + index);
-          }
-        });
-      }
-    });
 
-    if (!success) {
-      errors.push("Error with " + propName + ": " + this.messages.arrayType);
+    for (let val of array) {
+      if (type instanceof Schema) {
+        return type.validate(val);
+      } else if (toType(val) !== type && type !== "any") {
+        return "array item does not match type: " + type + " @ " + val;
+      } else if (propDef.subRules) {
+        for (let rule of propDef.subRules) {
+          let result = rule(val, type);
+          if (result instanceof Error) {
+            return result.message;
+          } else if (result === false) {
+            return "fails against a subrule with an undefined message";
+          }
+        }
+      }
     }
   }
 
-  _validateObjProp(val, propDef, propName) {
-    let errors = [];
+  _validateObjProp(val, propDef) {
     if (propDef.type instanceof Schema) {
-      let result = propDef.type.validate(val);
-      return result.errors ? result.errors : [];
+      return propDef.type.validate(val);
     }
 
     // Check type, immediatley return if there is an error here
     if (toType(val) !== propDef.type && propDef.type !== "any") {
-      return "Error with " + propName + ": " + this.messages.type;
+      return "does not match type: " +  propDef.type;
     }
 
     // Special validation for arrays
     if (toType(val) === "array") {
-       errors = errors.concat(this._validateArray(val, propDef, propName));
+       return this._validateArray(val, propDef);
     }
 
     // Run rule functions
     if (propDef.rules) {
       propDef.rules.forEach((rule) => {
-        let result = rule(val, propDef.type, propName);
+        let result = rule(val, propDef.type);
         if (result instanceof Error) {
-          errors.push(result.message);
+          return result.message;
+        } else if (result === false) {
+          return "fails against a rule with an undefined message";
         }
       });
     }
 
-    return errors;
+    return null;
   }
 
   validate(obj) {
-    let requiredProps = this.getRequiredProps();
-    let errors = [];
-    let satisfiedProps = 0;
+    let invalidProps = [];
+    let reasons = {};
 
     // Make sure all requiredProps are set
+    let requiredProps = this.getRequiredProps();
     for (let prop of requiredProps) {
       if (obj[prop] === undefined) {
-        errors.push(prop + " is required");
+        invalidProps.push(prop);
+        reasons[prop] = prop + " is required";
       }
     }
 
     // Make sure all props are valid
     for (let objProp in obj) {
       if (!(objProp in this.props)) {
-        errors.push(objProp + " not in schema rules");
+        invalidProps.push(objProp);
+        reasons[objProp] = objProp + " not in schema rules";
       } else {
-        let objPropErrors = this._validateObjProp(obj[objProp], this.props[objProp], objProp);
-        errors = errors.concat(objPropErrors);
+        let result = this._validateObjProp(obj[objProp], this.props[objProp]);
+        if (result) {
+          invalidProps.push(objProp);
+          reasons[objProp] = result;
+        }
       }
     }
 
-    return new Result(errors);
+    return new Result(invalidProps, reasons);
   }
 }
 
