@@ -1,11 +1,17 @@
 'use strict';
 
-const Result = require('./result');
-
 const toType = function (obj) {
     // toType credit goes to Angus Croll @ https://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 };
+
+class Result {
+  constructor(isValid, invalidFeilds, reasons) {
+    this.isValid = isValid;
+    this.invalidFeilds = invalidFeilds;
+    this.reasons = reasons;
+  }
+}
 
 class Schema {
   constructor(props) {
@@ -160,4 +166,5 @@ const rules = {
 };
 
 exports.Schema = Schema;
+exports.Result = Result;
 exports.rules = rules;
