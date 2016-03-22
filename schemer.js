@@ -39,7 +39,10 @@ class Schema {
     let type = propDef.type[0];
     let success = true;
     array.forEach((val) => {
-      if (toType(val) !== type && type !== "any") {
+      if (type instanceof Schema) {
+        let result = type.validate(val);
+        return result.errors ? result.errors : [];
+      } else if (toType(val) !== type && type !== "any") {
         success = false;
       } else if (propDef.subRules) {
         propDef.subRules.forEach((rule, index) => {
