@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const Schema = require('./schemer');
+const Schema = require('./schemer').Schema;
 
 describe('Schema', function() {
   let subModel;

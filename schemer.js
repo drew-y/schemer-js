@@ -6,10 +6,10 @@ const toType = function (obj) {
 };
 
 class Result {
-  constructor(invalidFeilds, reasons) {
-    this.invalidFeilds = invalidFeilds;
+  constructor(invalidProps, reasons) {
+    this.invalidProps = invalidProps;
     this.reasons = reasons;
-    if (invalidFeilds.length > 0) {
+    if (invalidProps.length > 0) {
       this.isValid = false;
     } else {
       this.isValid = true;
@@ -111,7 +111,7 @@ class Schema {
         reasons[objProp] = objProp + " not in schema rules";
       } else {
         let result = this._validateObjProp(obj[objProp], this.props[objProp]);
-        if (result) {
+        if (result && result.isValid !== true) {
           invalidProps.push(objProp);
           reasons[objProp] = result;
         }
