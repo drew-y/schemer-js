@@ -89,7 +89,7 @@ describe('Schema', function() {
       assert(result.reasons.bleh.reasons.bar === 'does not match type: string');
     });
 
-    it('validates arrays', function() {
+    it('validates arrays (and their subrules)', function() {
       let test = new Schema({
         foo: ["string"],
         bar: ["any"],
@@ -107,8 +107,38 @@ describe('Schema', function() {
         bar: [1, 4, 'fasda'],
         bleh: ["jksk", 'holag']
       });
-      console.log(success);
-      assert(success.isValid);
+
+      let fail = test.validate({
+        foo: [1,2,4,5],
+        bar: [1, 3],
+        bleh: ["hfdaksjhfladhjsf", "fkljsf"]
+      });
+
+      assert(success.isValid, "should be valid");
+      assert(fail.isValid === false, "should be invalid");
+    });
+
+    it('tests against rules', function() {
+      let test = new Schema({
+        foo: {
+          type: "string",
+          rules: [
+            rules.min(1),
+            rules.max(15)
+          ]
+        }
+      });
+
+      let success = test.validate({
+        foo: "hello"
+      });
+
+      let fail = test.validate({
+        foo: "hfkjsdhfkdjshfkdsh"
+      });
+
+      assert(success.isValid, "should be valid");
+      assert(fail.isValid === false, "should be invalid");
     });
   });
 });
