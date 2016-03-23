@@ -70,7 +70,11 @@ class Schema {
 
   _validateObjProp(val, propDef) {
     if (propDef.type instanceof Schema) {
-      return propDef.type.validate(val);
+      if (toType(val) === "object") {
+        return propDef.type.validate(val);
+      } else {
+        return "is not an an object";
+      }
     }
 
     // Check type, immediatley return if there is an error here
