@@ -5,76 +5,110 @@ const Schema = require('./schemer').Schema;
 const rules = require('./schemer').rules;
 
 describe('Schema', function() {
-  let subModel;
-  let testModel;
-
-  beforeEach(function() {
-    subModel = new Schema({
-      foo: {
-        type: 'string'
-      },
-      bar: {
-        type: 'number'
-      }
-    });
-
-    testModel = new Schema({
-      foo: {
-        type: 'string'
-      },
-      bar: {
-        type: 'number'
-      },
-      bleh: {
-        type: subModel
-      }
-    });
-  });
-
   describe('validation', function() {
     it('returns isValid = true with valid JSON', function() {
-      let testJSON = {
-        foo: "me",
-        bar: 5,
-        bleh: {
-          foo: "who?",
-          bar: 4
+      let test = new Schema({
+        hello: {
+          type: "string"
         }
+      });
+
+      let testJSON = {
+        hello: "world"
       };
 
-      let result = testModel.validate(testJSON);
-      console.log(result);
+      let result = test.validate(testJSON);
       assert(result.isValid === true);
     });
 
-    it('catches an invalid type', function() {
+    it('catches an invalid type and returns invalid fields', function() {
+      let test = new Schema({
+        foo: {
+          type: "string"
+        },
+        bar: {
+          type: "number"
+        },
+        bleh: {
+          type: ["number"]
+        }
+      });
+
       let testJSON = {
         foo: 5, // Should be a string
         bar: 5,
-        bleh: {
-          foo: "who?",
-          bar: 4
-        }
+        bleh: "adfshlasdfkj"
       };
 
-      let result = testModel.validate(testJSON);
+      let result = test.validate(testJSON);
       assert(result.isValid === false);
+      assert(result.invalidProps[0] == 'foo');
+      assert(result.invalidProps[1] == 'bleh');
+      assert(result.reasons.hasOwnProperty('foo'));
+      assert(result.reasons.hasOwnProperty('bleh'));
+    });
+
+    it('allows shorthand syntax', function() {
+      let test = new Schema({
+        foo: "string",
+        bar: new Schema({
+          bleh: "number"
+        })
+      });
+      let success = {
+        foo: "hola",
+        bar: {
+          bleh: 5
+        }
+      };
+      let fail = {
+        foo: 5,
+        bar: "k?"
+      };
+      assert(test.validate(success).isValid);
+      assert(!test.validate(fail).isValid);
     });
 
     it('catches an invalid type in subschema', function() {
-      let testJSON = {
-        foo: "me",
-        bar: 5,
+      let test = new Schema({
         bleh: {
-          foo: "who?",
+          type: new Schema({
+            bar: "string"
+          })
+        }
+      });
+      let testJSON = {
+        bleh: {
           bar: function() { // Should be a number
             console.log("you've been hacked!");
           }
         }
       };
 
-      let result = testModel.validate(testJSON);
-      assert(result.isValid === false);
+      let result = test.validate(testJSON);
+      assert(result.reasons.bleh.reasons.bar === 'does not match type: string');
+    });
+
+    it('validates arrays', function() {
+      let test = new Schema({
+        foo: ["string"],
+        bar: ["any"],
+        bleh: {
+          type: ["string"],
+          subRules: [
+            rules.min(3),
+            rules.max(7)
+          ]
+        }
+      });
+
+      let success = test.validate({
+        foo: ['dflahjd', 'thbase'],
+        bar: [1, 4, 'fasda'],
+        bleh: ["jksk", 'holag']
+      });
+      console.log(success);
+      assert(success.isValid);
     });
   });
 });
