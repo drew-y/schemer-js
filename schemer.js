@@ -143,7 +143,7 @@ rules.messages = {
 };
 
 rules.max = function(maxNum) {
-  return function(val, message) {
+  return function(val) {
     let success;
     if (toType(val) == "number") {
       success = val < maxNum;
@@ -153,12 +153,12 @@ rules.max = function(maxNum) {
       }
       success = val.length < maxNum;
     }
-    if (!success) return new Error(message || rules.messages.max);
+    if (!success) return new Error(rules.messages.max);
   };
 };
 
 rules.min = function(minNum) {
-  return function(val, message) {
+  return function(val) {
     let success;
     if (toType(val) == "number") {
       success = val > minNum;
@@ -168,14 +168,14 @@ rules.min = function(minNum) {
       }
       success = val.length > minNum;
     }
-    if (!success) return new Error(message || rules.messages.min);
+    if (!success) return new Error(rules.messages.min);
   };
 };
 
 rules.regex = function(regStmnt) {
-  return function(str, message) {
+  return function(str) {
     let success = regStmnt.test(str);
-    if (!success) return new Error(message || rules.messages.regex);
+    if (!success) return new Error(rules.messages.regex);
   };
 };
 
