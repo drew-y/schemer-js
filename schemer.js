@@ -91,14 +91,14 @@ class Schema {
 
     // Run rule functions
     if (propDef.rules) {
-      propDef.rules.forEach((rule) => {
+      for (let rule of propDef.rules) {
         let result = rule(val, propDef.type);
         if (result instanceof Error) {
           return result.message;
         } else if (result === false) {
           return "fails against a rule with an undefined message";
         }
-      });
+      }
     }
 
     return null;
