@@ -122,46 +122,48 @@ class Schema {
   }
 }
 
-const rules = {
-  messages: {
-    max: "Exceeds maximum allowable",
-    min: "Does not meet minimum required",
-    regex: "Fails regex statement test"
-  },
-  max: function(maxNum) {
-    return function(val, message) {
-      let success;
-      if (toType(val) == "number") {
-        success = val < maxNum;
-      } else {
-        if (val.length === undefined) {
-          throw new Error("Value cannot be compared");
-        }
-        success = val.length < maxNum;
+let rules = {};
+rules.messages = {
+  max: "Exceeds maximum allowable",
+  min: "Does not meet minimum required",
+  regex: "Fails regex statement test"
+};
+
+rules.max = function(maxNum) {
+  return function(val, message) {
+    let success;
+    if (toType(val) == "number") {
+      success = val < maxNum;
+    } else {
+      if (val.length === undefined) {
+        throw new Error("Value cannot be compared");
       }
-      if (!success) return new Error(message || this.messages.max);
-    };
-  },
-  min: function(minNum) {
-    return function(val, message) {
-      let success;
-      if (toType(val) == "number") {
-        success = val > minNum;
-      } else {
-        if (val.length === undefined) {
-          throw new Error("Value cannot be compared");
-        }
-        success = val.length > minNum;
+      success = val.length < maxNum;
+    }
+    if (!success) return new Error(message || rules.messages.max);
+  };
+};
+
+rules.min = function(minNum) {
+  return function(val, message) {
+    let success;
+    if (toType(val) == "number") {
+      success = val > minNum;
+    } else {
+      if (val.length === undefined) {
+        throw new Error("Value cannot be compared");
       }
-      if (!success) return new Error(message || this.messages.min);
-    };
-  },
-  regex: function(regStmnt) {
-    return function(str, message) {
-      let success = regStmnt.test(str);
-      if (!success) return new Error(message || this.messages.regex);
-    };
-  }
+      success = val.length > minNum;
+    }
+    if (!success) return new Error(message || rules.messages.min);
+  };
+};
+
+rules.regex = function(regStmnt) {
+  return function(str, message) {
+    let success = regStmnt.test(str);
+    if (!success) return new Error(message || rules.messages.regex);
+  };
 };
 
 exports.Schema = Schema;
