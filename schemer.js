@@ -20,7 +20,7 @@ class Result {
 class Schema {
   constructor(props) {
     this.validTypes = ["object", "array", "arguments", "error",
-    "math", "json", "date", "regexp", "string", "boolean", "number"];
+    "math", "json", "date", "regexp", "string", "boolean", "number", "any"];
     //Check prop syntax for errors
     for (let prop in props) {
       if (this.validTypes.indexOf(props[prop]) !== -1 ||
