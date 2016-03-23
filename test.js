@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const Schema = require('./schemer').Schema;
+const rules = require('./schemer').rules;
 
 describe('Schema', function() {
   let subModel;
@@ -74,6 +75,48 @@ describe('Schema', function() {
 
       let result = testModel.validate(testJSON);
       assert(result.isValid === false);
+    });
+  });
+});
+
+describe('rules', function() {
+  describe('min', function() {
+    let min = rules.min(5);
+
+    it('should return an error with a number less than min', function() {
+      let result = min(4);
+      assert(result instanceof Error);
+    });
+
+    it('should not return an error with a number greater than min', function() {
+      let result = min(6);
+      assert(!(result instanceof Error));
+    });
+
+    it('should return an error with a string less than min', function() {
+      let result = min("abc");
+      assert(result instanceof Error);
+    });
+
+    it('should not return an error with a string greater than min', function() {
+      let result = min("abcdef");
+      assert(!(result instanceof Error));
+    });
+
+    it('should return an error with an array less than min', function() {
+      let result = min([1,2,3]);
+      assert(result instanceof Error);
+    });
+
+    it('should not return an error with an array greater than min', function() {
+      let result = min([1,2,3,4,5,6]);
+      assert(!(result instanceof Error));
+    });
+
+    it('should throw an error', function() {
+      assert.throws(() => {
+        min(undefined);
+      });
     });
   });
 });
