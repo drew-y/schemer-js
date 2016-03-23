@@ -119,4 +119,44 @@ describe('rules', function() {
       });
     });
   });
+
+  describe('max', function() {
+    let max = rules.max(5);
+
+    it('should return an error with a number greater than max', function() {
+      let result = max(8);
+      assert(result instanceof Error);
+    });
+
+    it('should not return an error with a number less than max', function() {
+      let result = max(3);
+      assert(!(result instanceof Error));
+    });
+
+    it('should return an error with a string greater than max', function() {
+      let result = max("abcdefg");
+      assert(result instanceof Error);
+    });
+
+    it('should not return an error with a string less than max', function() {
+      let result = max("abcf");
+      assert(!(result instanceof Error));
+    });
+
+    it('should return an error with an array greater than max', function() {
+      let result = max([1,2,3,5,6,7]);
+      assert(result instanceof Error);
+    });
+
+    it('should not return an error with an array less than max', function() {
+      let result = max([1,2,3,4]);
+      assert(!(result instanceof Error));
+    });
+
+    it('should throw an error', function() {
+      assert.throws(() => {
+        max(undefined);
+      });
+    });
+  });
 });
