@@ -70,6 +70,7 @@ class Schema {
   }
 
   _validateObjProp(val, propDef) {
+    // Validate subschema
     if (propDef.type instanceof Schema) {
       if (toType(val) === "object") {
         return propDef.type.validate(val);
@@ -78,14 +79,14 @@ class Schema {
       }
     }
 
+    // Validate array
+    if (toType(propDef.type) === "array") {
+      return this._validateArray(val, propDef);
+    }
+
     // Check type, immediatley return if there is an error here
     if (toType(val) !== propDef.type && propDef.type !== "any") {
       return "does not match type: " +  propDef.type;
-    }
-
-    // Special validation for arrays
-    if (toType(val) === "array") {
-       return this._validateArray(val, propDef);
     }
 
     // Run rule functions
