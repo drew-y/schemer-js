@@ -24,7 +24,8 @@ class Schema {
     //Check prop syntax for errors
     for (let prop in props) {
       if (this.validTypes.indexOf(props[prop]) !== -1 ||
-          props[prop] instanceof Schema) {
+          props[prop] instanceof Schema ||
+          toType(props[prop]) === "array") {
         // Convert shortcut syntax (i.e prop: "string") into prop: {type: "string"}
         let type = props[prop];
         props[prop] = {type};
