@@ -19,9 +19,16 @@ class Result {
 
 class Schema {
   constructor(props) {
+    this.validTypes = ["object", "array", "arguments", "error",
+    "math", "json", "date", "regexp", "string", "boolean", "number"];
     //Check prop syntax for errors
     for (let prop in props) {
-      if (toType(props[prop]) !== "object") {
+      if (this.validTypes.indexOf(props[prop]) !== -1 ||
+          props[prop] instanceof Schema) {
+        // Convert shortcut syntax (i.e prop: "string") into prop: {type: "string"}
+        let type = props[prop];
+        props[prop] = {type};
+      } else if (toType(props[prop]) !== "object") {
         throw new Error("Invalid porperty description at: " + prop);
       }
       if (!props[prop].type) throw new Error("Type is required @: " + prop);
