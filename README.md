@@ -1,6 +1,6 @@
 # SchemerJS
 
-SchemerJS is a simple object schema validation library.
+A simple JavasScript object modeling and validation library.
 
 ## Basic Example:
 
