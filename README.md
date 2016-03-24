@@ -205,7 +205,7 @@ let passArr = lessThanFive([1,2,3,4,5,6])// returns undefined
 let failArr = lessThanFive([1,2,3])// returns an Error
 ```
 
-### min `max(num)`
+### max `max(num)`
 
 Takes a `Number` and returns a `Function`. The function that max returns can be
 passed a `Number` `String` or `Array`. With a `Number` the function returns an
