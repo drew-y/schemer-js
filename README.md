@@ -1,6 +1,6 @@
 # SchemerJS
 
-A simple JavasScript object modeling and validation library.
+A simple database agnostic JavasScript object modeling and validation library.
 
 ## Instalation 
 
