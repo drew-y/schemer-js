@@ -246,4 +246,16 @@ describe('rules', function() {
       });
     });
   });
+
+  describe('regex', function() {
+    let regex = rules.regex(/hello/);
+
+    it('should evaluate correctly', function() {
+      let pass = regex('hello');
+      let fail = regex('NOOOOOOOO! - Darth Vader');
+
+      assert(!(pass instanceof Error));
+      assert(fail instanceof Error);
+    });
+  });
 });
