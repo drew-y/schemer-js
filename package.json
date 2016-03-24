@@ -1,5 +1,5 @@
 {
-  "name": "schemer",
+  "name": "schemerjs",
   "version": "1.0.0",
   "description": "Micro object schema and validation library",
   "main": "schemer.js",
@@ -12,6 +12,14 @@
   ],
   "author": "Andrew Youngwerth",
   "license": "MIT",
-  "dependencies": {
-  }
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/drew-y/schemer-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/drew-y/schemer-js/issues"
+  },
+  "homepage": "https://github.com/drew-y/schemer-js#readme"
 }
