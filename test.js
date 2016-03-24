@@ -140,6 +140,29 @@ describe('Schema', function() {
       assert(success.isValid, "should be valid");
       assert(fail.isValid === false, "should be invalid");
     });
+
+    it('interprets optionals correctly', function() {
+      let test = new Schema({
+        foo: "string",
+        bar: {
+          type: "string",
+          optional: true,
+        }
+      });
+
+      let success = test.validate({
+        foo: "hello"
+      });
+
+      // Should fail if the optional type doesnt match.
+      let fail = test.validate({
+        foo: "hfkjsdhfkdjshfkdsh",
+        bar: 5
+      });
+
+      assert(success.isValid, "should be valid");
+      assert(fail.isValid === false, "should be invalid");
+    });
   });
 });
 
