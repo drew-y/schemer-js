@@ -2,6 +2,10 @@
 
 A simple JavasScript object modeling and validation library.
 
+## Instalation 
+
+`npm install --save schemerjs`
+
 ## Basic Example:
 
 ```javascript
