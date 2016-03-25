@@ -138,7 +138,7 @@ let Example = new Schema({
 });
 
 let pass = Example.validate({hello: "world"}); // isValid == true
-let fail = Example.validate({hello: "world"}); // isValid == false
+let fail = Example.validate({hello: "universe"}); // isValid == false
 ```
 
 ### subRules `[functions]`
