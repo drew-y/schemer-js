@@ -178,9 +178,9 @@ let Example = new Schema({
   hello: {
     type: "string",
     rules: [
-      min(1), // We use () because these functions return another function
-      max(6),
-      regex(/world/)
+      rules.min(1), // We use () because these functions return another function
+      rules.max(6),
+      rules.regex(/world/)
     ]
   }
 });
