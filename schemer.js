@@ -146,12 +146,12 @@ rules.max = function(maxNum) {
   return function(val) {
     let success;
     if (toType(val) == "number") {
-      success = val < maxNum;
+      success = val <= maxNum;
     } else {
       if (val.length === undefined) {
         throw new Error("Value cannot be compared");
       }
-      success = val.length < maxNum;
+      success = val.length <= maxNum;
     }
     if (!success) return new Error(rules.messages.max);
   };
@@ -161,12 +161,12 @@ rules.min = function(minNum) {
   return function(val) {
     let success;
     if (toType(val) == "number") {
-      success = val > minNum;
+      success = val >= minNum;
     } else {
       if (val.length === undefined) {
         throw new Error("Value cannot be compared");
       }
-      success = val.length > minNum;
+      success = val.length >= minNum;
     }
     if (!success) return new Error(rules.messages.min);
   };
