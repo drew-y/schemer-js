@@ -199,14 +199,14 @@ Usage:
 ```javascript
 const rules = require("schemerjs").rules;
 
-let lessThanFive = rules.min(5);
+let atLeastFive = rules.min(5);
 
-let passNum = lessThanFive(7); // returns undefined
-let failNum = lessThanFive(2); // returns an Error
-let passStr = lessThanFive('abcdefg'); // returns undefined
-let failStr = lessThanFive('abc'); //returns an Error
-let passArr = lessThanFive([1,2,3,4,5,6])// returns undefined
-let failArr = lessThanFive([1,2,3])// returns an Error
+let passNum = atLeastFive(7); // returns undefined
+let failNum = atLeastFive(2); // returns an Error
+let passStr = atLeastFive('abcdefg'); // returns undefined
+let failStr = atLeastFive('abc'); //returns an Error
+let passArr = atLeastFive([1,2,3,4,5,6])// returns undefined
+let failArr = atLeastFive([1,2,3])// returns an Error
 ```
 
 ### max `max(num)`
@@ -222,14 +222,14 @@ Usage:
 ```javascript
 const rules = require("schemerjs").rules;
 
-let greaterThanFive = rules.max(5);
+let atMostFive = rules.max(5);
 
-let passNum = greaterThanFive(2); // returns undefined
-let failNum = greaterThanFive(7); // returns an Error
-let passStr = greaterThanFive('abc'); // returns undefined
-let failStr = greaterThanFive('abcdefg'); //returns an Error
-let passArr = greaterThanFive([1,2,4])// returns undefined
-let failArr = greaterThanFive([1,2,3,4,5,6])// returns an Error
+let passNum = atMostFive(2); // returns undefined
+let failNum = atMostFive(7); // returns an Error
+let passStr = atMostFive('abc'); // returns undefined
+let failStr = atMostFive('abcdefg'); //returns an Error
+let passArr = atMostFive([1,2,4])// returns undefined
+let failArr = atMostFive([1,2,3,4,5,6])// returns an Error
 ```
 
 ### regex `regex(regExp)`
