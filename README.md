@@ -115,13 +115,15 @@ considered valid. defaults to false.
 ### rules `[functions]`
 
 An array of functions that return either a `Boolean` or an `Error`. The object
-being validated is considered to be invalid if the function returns false
-or an error. The error.message is listed as a reason for failure if specified.
+being validated is considered to be invalid if the any of the functions return false
+or an Error. The error.message is listed as a reason for failure if specified. Each
+rule function is called as rule(propertyVal, proptertyDefinition.type)
 
 ##### Example:
 
 ```javascript
-let ruleFunc = function(val) {
+let ruleFunc = function(val, type) {
+    // type == "string" (not used)
     // returns an error if val !== "world"
     if (val !== "world") {
       return new Error("does not equal world");
