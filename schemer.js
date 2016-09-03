@@ -51,6 +51,10 @@ class Schema {
   _validateArray(array, propDef) {
     let type = propDef.type[0];
 
+    if (toType(array) !== "array") {
+      return `Expected an array got: ${toType(array)}`
+    }
+
     for (let val of array) {
       if (type instanceof Schema) {
         return type.validate(val);
