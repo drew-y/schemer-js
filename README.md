@@ -190,7 +190,7 @@ let Example = new Schema({
 
 ### min `min(num)`
 
-Takes a `Number` and returns a `Function`. The function that max returns can be
+Takes a `Number` and returns a `Function`. The function that min returns can be
 passed a `Number` `String` or `Array`. With a `Number` the function returns an
 `Error` if the value the function is given is less than the number passed to
 min. With a `String` or an `Array` the function returns an `Error` if the the
