@@ -3,6 +3,12 @@
   "version": "1.0.2",
   "description": "Micro object schema and validation library",
   "main": "schemer.js",
+  "typings": "schemer.d.ts",
+  "files": [
+    "schemer.js",
+    "schemer.d.ts",
+    "license.md"
+  ],
   "scripts": {
     "test": "node test.js"
   },
