@@ -1,7 +1,9 @@
 export declare class Result {
     invalidProps: string[];
     isValid: boolean;
-    reasons: string | Result;
+    reasons: {
+        [property: string]: string | Result;
+    };
     constructor(invalidProps: string[], reasons: any);
 }
 /** Can be a vallid type as a string or [type] (meaning an array of type) */

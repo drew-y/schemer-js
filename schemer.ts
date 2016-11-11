@@ -8,7 +8,7 @@ const toType = function(obj: Object): string {
 export class Result {
   invalidProps: string[];
   isValid: boolean;
-  reasons: string | Result;
+  reasons: { [property: string]: string | Result };
 
   constructor(invalidProps: string[], reasons) {
     this.invalidProps = invalidProps;
